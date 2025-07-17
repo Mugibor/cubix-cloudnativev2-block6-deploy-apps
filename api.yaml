@@ -5,6 +5,7 @@ image:
   tag: "latest"
 
 configMap:
+  directory: configuration
   enabled: true
   as: file
 
