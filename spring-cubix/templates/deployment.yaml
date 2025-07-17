@@ -60,18 +60,25 @@ spec:
               port: management
               path: /actuator/health/readiness
           env:
-          - name: JAVA_OPTS
-            value: {{ .Values.javaOpts | quote }}
-          - name: MANAGEMENT_SERVER_PORT
-            value: "9080"
+            - name: JAVA_OPTS
+              value: {{ .Values.javaOpts | quote }}
+            - name: MANAGEMENT_SERVER_PORT
+              value: "9080"
           {{- if and .Values.configMap.enabled (eq .Values.configMap.as "env") }}
           envFrom:
             - configMapRef:
                 name: {{ include "spring-cubix.fullname" . }}
           {{- end }}
           {{- range .Values.env }}
-          - name: {{ .name }}
-            value: {{ .value | quote }}
+            - name: {{ .name }}
+              value: {{ .value | quote }}
+          {{- end }}
+          {{- range .Values.secret }}
+            - name: {{ .envName }}
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .secretName }}
+                  key: {{ .secretKey }}
           {{- end }}
           ports:
             - name: http
