@@ -64,6 +64,12 @@ spec:
               value: {{ .Values.javaOpts | quote }}
             - name: MANAGEMENT_SERVER_PORT
               value: "9080"
+            - name: OTEL_SERVICE_NAME
+              value: {{ include "spring-cubix.fullname" . }}
+            - name: OTEL_EXPORTER_OTLP_ENDPOINT
+              value: {{ required "OpenTelemetry target URL is required!" .Values.openTelemetry.targetUrl }}
+            - name: OTEL_METRICS_EXPORTER
+              value: none
           {{- if and .Values.configMap.enabled (eq .Values.configMap.as "env") }}
           envFrom:
             - configMapRef:
@@ -80,6 +86,7 @@ spec:
                   name: {{ .secretName }}
                   key: {{ .secretKey }}
           {{- end }}
+
           ports:
             - name: http
               containerPort: 8080
