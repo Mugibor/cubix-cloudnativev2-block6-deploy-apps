@@ -13,9 +13,8 @@ secret:
     secretName: db-password
     secretKey: password
 
-#env:
-#- name: SPRING_JPA_DATABASE_PLATFORM
-#  value: org.hibernate.dialect.PostgreSQLDialect
+openTelemetry:
+  targetUrl: http://tempo.tools:4317
 
 ingress:
   enabled: false
